@@ -6,8 +6,8 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - name: run command
-        run: npm convert
       - name: exho
         run: echo 'running'
+      - name: run command
+        run: "npm convert"
 
