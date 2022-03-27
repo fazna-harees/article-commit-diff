@@ -6,6 +6,13 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
+      - name: clone repo
+        uses: actions/checkout@v2
+      - name: setup node 14
+        uses: actions/setup-node@v2
+        with:
+          node-version: "14"
+          cache: "npm"
       - name: exho
         run: echo 'running'
       - name: install dependencies
