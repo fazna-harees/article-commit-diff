@@ -9,5 +9,5 @@ jobs:
       - name: exho
         run: echo 'running'
       - name: run command
-        run: "npm convert"
+        run: node ./convert-to-json.js
 

@@ -75,12 +75,12 @@ const getPosts = () => {
 // getPosts();
 
 const getCommits = async() => {
-    const commits = await axios.get('https://api.github.com/repos/fazna-harees/article-commit-diff/commits')
-    const last_commit = commits[commits.length -1 ]
-    console.log(last_commit)
-    const last_tree = await axios.get(last_commit.commit.tree.url)
-    console.log(last_tree.tree)
-    last_tree.tree.forEach(i => {
+    const {data:commits} = await axios.get('https://api.github.com/repos/fazna-harees/article-commit-diff/commits')
+    const last_commit = commits[0]
+    const {data:last_tree} = await axios.get(last_commit.commit.tree.url)
+    const articles = last_tree.tree.find(i => i.path==="articles")
+    const {data:mdfiles} = await axios.get(articles.url)
+    mdfiles.tree.forEach(i => {
         console.log(i.path)
     })
 }
