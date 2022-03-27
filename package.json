@@ -1,0 +1,22 @@
+{
+  "name": "article-commit-diff",
+  "version": "1.0.0",
+  "description": "",
+  "main": "convert-to-json.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fazna-harees/article-commit-diff.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/fazna-harees/article-commit-diff/issues"
+  },
+  "homepage": "https://github.com/fazna-harees/article-commit-diff#readme",
+  "dependencies": {
+    "axios": "^0.26.1"
+  }
+}
