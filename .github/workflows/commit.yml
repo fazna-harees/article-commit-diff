@@ -18,5 +18,5 @@ jobs:
       - name: install dependencies
         run: npm install
       - name: run command
-        run: node ../convert-to-json.js
+        run: node convert-to-json.js
 
