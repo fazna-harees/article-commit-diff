@@ -2,7 +2,12 @@ name: commit
 
 on: [pull_request,push]
 
-job:
-  steps:
-    - name: Run code
-      run: node 
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: run command
+        run: node convert-to-json.js
+      - name: exho
+        run: echo 'running'
+
