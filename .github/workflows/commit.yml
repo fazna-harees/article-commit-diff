@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: run command
-        run: node convert-to-json.js
+        run: npm convert
       - name: exho
         run: echo 'running'
 
