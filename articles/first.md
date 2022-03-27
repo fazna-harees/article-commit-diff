@@ -1,6 +1,6 @@
 ---
 title: ERC-20 Tutorial
-author: Omer Furkan
+author: CHarlie Kaufman
 date: December 2022
 slug: erc20
 category: blockchain
