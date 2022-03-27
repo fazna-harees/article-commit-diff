@@ -7,25 +7,41 @@ const dirPath = path.join(__dirname, "./articles");
 const postlist = [];
 
 const getPost = async(slug) => {
-    const res = await axios.get(`https://localhost:4000/slug/${slug}`);
-    return res.data
+    const res = await axios.get(`htts://localhost:4000/blog/slug/${slug}`);
+    return res;
 }   
 const checkIfPostexist = async(slug) => {
-    const res = await getPost(slug)
-    console.log("SLUG",res)
-    if(res){
-        return true;
+    try{
+        const res = await getPost(slug)
+        console.log("POST EXIST",slug)
+        if(res?.data){
+            return true;
+        }
+        return false
+    }catch(err) {
+        console.log("SLUG ERROR",err)
     }
-    return false
 }
 
 const updatePost = async(post) => {
-    const { data } = await getPost(post.slug)
-    await axios.post(`https://localhost:4000/update/${data.id}`,{data:post})
+    try{
+        const { data } = await getPost(post.slug)
+        console.log(data)
+        await axios.post(`htts://localhost:4000/blog/update/${data._id}`,post)
+        console.log("UPDATED",post.slug)
+    }catch(err) {
+        console.log("UPDATE ERROR",err)
+    }
 }
 
 const createPost = async(post) => {
-    const { data } = await axios.post(`https://localhost:4000/add`,{data:post})
+    try{
+        const res = await axios.post(`htts://localhost:4000/blog/add`,post)
+        console.log("CREATED",post.slug)
+
+    }catch(err) {
+        console.log("CREATE ERROR",err)
+    }
 }
 
 const forEachPost = async(file) => {
@@ -48,7 +64,6 @@ const forEachPost = async(file) => {
               // eslint-disable-next-line prefer-destructuring
               obj[line.split(": ")[0]] = line.split(": ")[1].slice(0,-1);
             });
-            console.log(obj);
             return obj;
           }
         };
@@ -75,26 +90,23 @@ const forEachPost = async(file) => {
           subcategory: metadata.subcategory || "NULL",
           content: content || "No content given",
         };
-
+        console.log(post)
         // postlist.push(post);
-        const doesExist = await checkIfPostexist(post.slug)
-        if(doesExist) {
-            await updatePost(post)
-        }else{
-            await createPost(post)
+        try{
+        if(post.slug){
+            const doesExist = await checkIfPostexist(post.slug)
+            if(doesExist) {
+                await updatePost(post)
+            }else{
+                await createPost(post)
+            }
+        }
+        }catch(err) {
+            console.log(err)
         }
       });
 }
-const getPosts = () => {
-  fs.readdir(dirPath, (err, files) => {
-    if (err) {
-      return console.log(`failed${err}`);
-    }
-    files.forEach((file, i) => {
-    forEachPost(file,i)
-    });
-  });
-};
+
 
 // getPosts();
 
@@ -113,11 +125,11 @@ const checkIfMdFile = ( file ) => {
 const getCommits = async() => {
     const {data:commits} = await axios.get('https://api.github.com/repos/fazna-harees/article-commit-diff/commits/feat/new')
     if(commits.files){
-        commits.files.forEach(i => {
+        commits.files.forEach(async(i) => {
             const file = getlastName(i.filename)
             if(checkIfMdFile(file)){
-                getPosts(file)
-                console.log(file)
+                console.log("FILE",file)
+                await forEachPost(file)
             }
         })
     }

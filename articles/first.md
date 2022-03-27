@@ -2,12 +2,12 @@
 title: My First Article
 author: CHarlie Kaufman
 date: December 2022
-slug: erc20
+slug: first-slug
 category: blockchain
 subcategory: tokens
 ---
 
-## Blah
+## My FIrst Article
 
 ### Hello world
 

@@ -1,9 +1,10 @@
 ---
 title: My Second Article
 date: December 2022
-slug: erc20
+slug: second-slug
 category: blockchain
 subcategory: tokens
+description: hello hello who's there
 ---
 
 ## Blah
