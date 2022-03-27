@@ -8,6 +8,8 @@ jobs:
     steps:
       - name: exho
         run: echo 'running'
+      - name: install dependencies
+        run: npm install
       - name: run command
         run: node ../convert-to-json.js
 
