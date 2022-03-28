@@ -6,6 +6,10 @@ const axios = require('axios');
 const dirPath = path.join(__dirname, "./articles");
 const postlist = [];
 
+if (process.env.NODE_ENV !== 'production') {
+    require('dotenv').config();
+}
+
 const getPost = async(slug) => {
     const res = await axios.get(`${process.env.REACT_APP_BACKEND_API}/blog/slug/${slug}`);
     return res;
