@@ -7,7 +7,7 @@ category: blockchain
 subcategory: abc
 ---
 
-## My THRID ARTICEL
+## My THIRD ARTICEL
 ### Hello world
 
 hfaifh faiwofhiawhfo heihe oerhoerheoirh or ejro

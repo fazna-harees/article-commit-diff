@@ -11,7 +11,7 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 const getPost = async(slug) => {
-    const res = await axios.get(`${process.env.REACT_APP_BACKEND_API}/blog/slug/${slug}`);
+    const res = await axios.get(`https://bit-by-bit-backend.herokuapp.com/blog/slug/${slug}`);
     return res;
 }   
 const checkIfPostexist = async(slug) => {
@@ -31,7 +31,7 @@ const updatePost = async(post) => {
     try{
         const { data } = await getPost(post.slug)
         console.log(data)
-        await axios.post(`${process.env.REACT_APP_BACKEND_API}/blog/update/${data._id}`,post)
+        await axios.post(`https://bit-by-bit-backend.herokuapp.com/blog/update/${data._id}`,post)
         console.log("UPDATED",post.slug)
     }catch(err) {
         console.log("UPDATE ERROR",err)
@@ -40,7 +40,7 @@ const updatePost = async(post) => {
 
 const createPost = async(post) => {
     try{
-        const res = await axios.post(`${process.env.REACT_APP_BACKEND_API}/blog/add`,post)
+        const res = await axios.post(`https://bit-by-bit-backend.herokuapp.com/blog/add`,post)
         console.log("CREATED",post.slug)
 
     }catch(err) {
