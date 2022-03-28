@@ -4,7 +4,7 @@ author: CHarlie Kaufman
 date: December 2022
 slug: third-slug
 category: blockchain
-subcategory: tokens
+subcategory: abc
 ---
 
 ## My THRID ARTICEL
