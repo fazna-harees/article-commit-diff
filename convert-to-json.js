@@ -119,6 +119,11 @@ const getlastName = ( path) => {
     return arr[arr.length -1]
 }
 
+const getSecondLast = (path) => {
+    const arr = path.split('/')
+    return arr[arr.length -2]
+}
+
 const checkIfMdFile = ( file ) => {
     const last = file.slice(-2)
     if(last === "md"){
@@ -130,8 +135,9 @@ const getCommits = async() => {
     const {data:commits} = await axios.get('https://api.github.com/repos/fazna-harees/article-commit-diff/commits/feat/new')
     if(commits.files){
         commits.files.forEach(async(i) => {
+            const article = getSecondLast(i.filename)
             const file = getlastName(i.filename)
-            if(checkIfMdFile(file)){
+            if(checkIfMdFile(file) && article==="articles"){
                 console.log("FILE",file)
                 await forEachPost(file)
             }
