@@ -137,7 +137,7 @@ const getCommits = async() => {
         commits.files.forEach(async(i) => {
             const article = getSecondLast(i.filename)
             const file = getlastName(i.filename)
-            if(checkIfMdFile(file) && article==="articles"){
+            if(checkIfMdFile(file) && article==="articles" && i.status!=="removed"){
                 console.log("FILE",file)
                 await forEachPost(file)
             }
