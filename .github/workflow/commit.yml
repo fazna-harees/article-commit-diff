@@ -1,8 +1,0 @@
-name: commit
-
-on: [pull_request,push]
-
-job:
-  steps:
-    - name: Run code
-      run: node 

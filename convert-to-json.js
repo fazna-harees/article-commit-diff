@@ -1,4 +1,3 @@
-/* eslint-disable consistent-return */
 const path = require("path");
 const fs = require("fs");
 const axios = require('axios');
@@ -6,11 +5,55 @@ const axios = require('axios');
 const dirPath = path.join(__dirname, "./articles");
 const postlist = [];
 
-const forEachPost = (file, i) => {
+require('dotenv').config()
+const { BACKEND_API, API_KEY } = process.env;
+
+const getPost = async(slug) => {
+    const res = await axios.get(`${BACKEND_API}blog/slug/${slug}`);
+    return res;
+}   
+const checkIfPostexist = async(slug) => {
+    try{
+        const res = await getPost(slug)
+        console.log("POST EXIST",slug)
+        if(res?.data){
+            return true;
+        }
+        return false
+    }catch(err) {
+        console.log("SLUG ERROR",err)
+    }
+}
+
+const updatePost = async(post) => {
+    try{
+        const { data } = await getPost(post.slug)
+        console.log(data)
+        await axios.post(`${BACKEND_API}blog/update/${data._id}`,post,{
+            headers: {
+                "Authorization": `Api-key ${API_KEY}`
+            }
+        })
+        console.log("UPDATED",post.slug)
+    }catch(err) {
+        console.log("UPDATE ERROR",err)
+    }
+}
+
+const createPost = async(post) => {
+    try{
+        await axios.post(`${BACKEND_API}blog/add`,post)
+        console.log("CREATED",post.slug)
+
+    }catch(err) {
+        console.log("CREATE ERROR",err)
+    }
+}
+
+const forEachPost = async(file) => {
     const obj = {};
       let post;
-      // eslint-disable-next-line @typescript-eslint/no-shadow
-      fs.readFile(`${dirPath}/${file}`, "utf8", (err, contents) => {
+      fs.readFile(`${dirPath}/${file}`, "utf8", async(err, contents) => {
         const getMetadataIndices = (acc, elem, index) => {
           if (/^---/.test(elem)) {
             acc.push(index);
@@ -26,7 +69,6 @@ const forEachPost = (file, i) => {
               // eslint-disable-next-line prefer-destructuring
               obj[line.split(": ")[0]] = line.split(": ")[1].slice(0,-1);
             });
-            console.log(obj);
             return obj;
           }
         };
@@ -53,36 +95,52 @@ const forEachPost = (file, i) => {
           subcategory: metadata.subcategory || "NULL",
           content: content || "No content given",
         };
-
-        postlist.push(post);
-        if (i === files.length - 1) {
-          const data = JSON.stringify(postlist);
-          fs.writeFileSync("src/posts.json", data);
+        console.log(post)
+        // postlist.push(post);
+        try{
+        if(post.slug){
+            const doesExist = await checkIfPostexist(post.slug)
+            if(doesExist) {
+                await updatePost(post)
+            }else{
+                await createPost(post)
+            }
+        }
+        }catch(err) {
+            console.log(err)
         }
       });
 }
-const getPosts = () => {
-  fs.readdir(dirPath, (err, files) => {
-    if (err) {
-      return console.log(`failed${err}`);
+
+const getlastName = ( path) => {
+    const arr = path.split('/')
+    return arr[arr.length -1]
+}
+
+const getSecondLast = (path) => {
+    const arr = path.split('/')
+    return arr[arr.length -2]
+}
+
+const checkIfMdFile = ( file ) => {
+    const last = file.slice(-2)
+    if(last === "md"){
+        return true
     }
-    files.forEach((file, i) => {
-    forEachPost(file,i)
-    });
-  });
-};
-
-// getPosts();
-
+    return false;
+}
 const getCommits = async() => {
-    const commits = await axios.get('https://api.github.com/repos/fazna-harees/article-commit-diff/commits')
-    const last_commit = commits[commits.length -1 ]
-    console.log(last_commit)
-    const last_tree = await axios.get(last_commit.commit.tree.url)
-    console.log(last_tree.tree)
-    last_tree.tree.forEach(i => {
-        console.log(i.path)
-    })
+    const {data:commits} = await axios.get('https://api.github.com/repos/fazna-harees/article-commit-diff/commits/test')
+    if(commits.files){
+        commits.files.forEach(async(i) => {
+            const article = getSecondLast(i.filename)
+            const file = getlastName(i.filename)
+            if(checkIfMdFile(file) && article==="articles" && i.status!=="removed"){
+                console.log("FILE",file)
+                await forEachPost(file)
+            }
+        })
+    }
 }
 
 getCommits()

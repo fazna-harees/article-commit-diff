@@ -1,0 +1,24 @@
+name: commit
+
+on: 
+  pull_request:
+    types: [closed]
+    branches: [test]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: clone repo
+        uses: actions/checkout@v2
+      - name: setup node 14
+        uses: actions/setup-node@v2
+        with:
+          node-version: "14"
+          cache: "npm"
+      - name: install dependencies
+        run: npm install
+      - name: run command
+        run: node convert-to-json.js
+      if: github.event.pull_request.merged == true
+
