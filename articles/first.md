@@ -1,7 +1,7 @@
 ---
 title: My First Article
 author: CHarlie Kaufman
-date: December 2022
+date: December 2022 31
 slug: first-slug
 category: blockchain
 subcategory: tokens

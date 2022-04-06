@@ -5,6 +5,7 @@ const axios = require('axios');
 
 const dirPath = path.join(__dirname, "./articles");
 const postlist = [];
+const API_KEY = "1ab2c3d4e5f61ab2c3d4e5f6"
 
 if (process.env.NODE_ENV !== 'production') {
     require('dotenv').config();
@@ -31,7 +32,11 @@ const updatePost = async(post) => {
     try{
         const { data } = await getPost(post.slug)
         console.log(data)
-        await axios.post(`https://bit-by-bit-backend.herokuapp.com/blog/update/${data._id}`,post)
+        await axios.post(`https://bit-by-bit-backend.herokuapp.com/blog/update/${data._id}`,post,{
+            headers: {
+                "Authorization": `Api-key ${API_KEY}`
+            }
+        })
         console.log("UPDATED",post.slug)
     }catch(err) {
         console.log("UPDATE ERROR",err)
