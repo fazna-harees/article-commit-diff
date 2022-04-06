@@ -20,5 +20,5 @@ jobs:
         run: npm install
       - name: run command
         run: node convert-to-json.js
-      if: github.event.pull_request.merged == true
+        if: github.event.pull_request.merged == true
 
