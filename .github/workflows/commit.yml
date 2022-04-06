@@ -1,6 +1,9 @@
 name: commit
 
-on: [push]
+on: 
+  pull_request:
+    types: [closed]
+    branches: [feat/new]
 
 jobs:
   test:
@@ -13,10 +16,9 @@ jobs:
         with:
           node-version: "14"
           cache: "npm"
-      - name: exho
-        run: echo 'running'
       - name: install dependencies
         run: npm install
       - name: run command
         run: node convert-to-json.js
+      if: github.event.pull_request.merged == true
 

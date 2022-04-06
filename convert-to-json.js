@@ -1,18 +1,15 @@
-/* eslint-disable consistent-return */
 const path = require("path");
 const fs = require("fs");
 const axios = require('axios');
 
 const dirPath = path.join(__dirname, "./articles");
 const postlist = [];
-const API_KEY = "1ab2c3d4e5f61ab2c3d4e5f6"
 
-if (process.env.NODE_ENV !== 'production') {
-    require('dotenv').config();
-}
+require('dotenv').config()
+const { BACKEND_API, API_KEY } = process.env;
 
 const getPost = async(slug) => {
-    const res = await axios.get(`https://bit-by-bit-backend.herokuapp.com/blog/slug/${slug}`);
+    const res = await axios.get(`${BACKEND_API}blog/slug/${slug}`);
     return res;
 }   
 const checkIfPostexist = async(slug) => {
@@ -32,7 +29,7 @@ const updatePost = async(post) => {
     try{
         const { data } = await getPost(post.slug)
         console.log(data)
-        await axios.post(`https://bit-by-bit-backend.herokuapp.com/blog/update/${data._id}`,post,{
+        await axios.post(`${BACKEND_API}blog/update/${data._id}`,post,{
             headers: {
                 "Authorization": `Api-key ${API_KEY}`
             }
@@ -45,7 +42,7 @@ const updatePost = async(post) => {
 
 const createPost = async(post) => {
     try{
-        const res = await axios.post(`https://bit-by-bit-backend.herokuapp.com/blog/add`,post)
+        await axios.post(`${BACKEND_API}blog/add`,post)
         console.log("CREATED",post.slug)
 
     }catch(err) {
@@ -56,7 +53,6 @@ const createPost = async(post) => {
 const forEachPost = async(file) => {
     const obj = {};
       let post;
-      // eslint-disable-next-line @typescript-eslint/no-shadow
       fs.readFile(`${dirPath}/${file}`, "utf8", async(err, contents) => {
         const getMetadataIndices = (acc, elem, index) => {
           if (/^---/.test(elem)) {
@@ -115,9 +111,6 @@ const forEachPost = async(file) => {
         }
       });
 }
-
-
-// getPosts();
 
 const getlastName = ( path) => {
     const arr = path.split('/')
