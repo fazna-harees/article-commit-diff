@@ -130,7 +130,7 @@ const checkIfMdFile = ( file ) => {
     return false;
 }
 const getCommits = async() => {
-    const {data:commits} = await axios.get('https://api.github.com/repos/fazna-harees/article-commit-diff/commits/feat/new')
+    const {data:commits} = await axios.get('https://api.github.com/repos/fazna-harees/article-commit-diff/commits/test')
     if(commits.files){
         commits.files.forEach(async(i) => {
             const article = getSecondLast(i.filename)
