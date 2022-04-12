@@ -3,11 +3,17 @@ const fs = require("fs");
 const axios = require('axios');
 
 const dirPath = path.join(__dirname, "./articles");
-const postlist = [];
 
 require('dotenv').config()
-const { BACKEND_API, API_KEY } = process.env;
+const { BACKEND_API, BRANCH, API_KEY, ORGANIZATION, REPO } = process.env;
 
+const removeLineBreaks = (str) => {
+    var newstr = "";
+    for( var i = 0; i < str.length; i++ ) 
+        if( !(str[i] == '\n' || str[i] == '\r') )
+            newstr += str[i];
+    return newstr;
+}
 const getPost = async(slug) => {
     const res = await axios.get(`${BACKEND_API}blog/slug/${slug}`);
     return res;
@@ -67,7 +73,9 @@ const forEachPost = async(file) => {
             const metadata = lines.slice(metadataIndices[0] + 1, metadataIndices[1]);
             metadata.forEach((line) => {
               // eslint-disable-next-line prefer-destructuring
-              obj[line.split(": ")[0]] = line.split(": ")[1].slice(0,-1);
+              obj[line.split(": ")[0]] = removeLineBreaks(line.split(": ")[1])
+              console.log(obj[line.split(": ")[0]])
+
             });
             return obj;
           }
@@ -96,7 +104,6 @@ const forEachPost = async(file) => {
           content: content || "No content given",
         };
         console.log(post)
-        // postlist.push(post);
         try{
         if(post.slug){
             const doesExist = await checkIfPostexist(post.slug)
@@ -130,7 +137,7 @@ const checkIfMdFile = ( file ) => {
     return false;
 }
 const getCommits = async() => {
-    const {data:commits} = await axios.get('https://api.github.com/repos/fazna-harees/article-commit-diff/commits/test')
+    const {data:commits} = await axios.get(`https://api.github.com/repos/${ORGANIZATION}/${REPO}/commits/${BRANCH}`)
     if(commits.files){
         commits.files.forEach(async(i) => {
             const article = getSecondLast(i.filename)
